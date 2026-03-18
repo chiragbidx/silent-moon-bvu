@@ -33,9 +33,16 @@ interface NavbarProps {
 export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
-    <header className="shadow-inner bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card">
-      <Link href="/" className="font-bold text-lg flex items-center">
-        <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
+    <header
+      className="shadow-inner bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card"
+      style={{
+        borderColor: "var(--primary)",
+        background:
+          "linear-gradient(87deg, var(--primary) 20%, var(--secondary) 100%)",
+      }}
+    >
+      <Link href="/" className="font-bold text-lg flex items-center text-primary-foreground">
+        <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-accent to-secondary rounded-lg w-9 h-9 mr-2 border text-white" />
         {navbar.brandName}
       </Link>
       {/* <!-- Mobile --> */}
@@ -55,8 +62,8 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
             <div>
               <SheetHeader className="mb-4 ml-4">
                 <SheetTitle className="flex items-center">
-                  <Link href="/" className="flex items-center">
-                    <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
+                  <Link href="/" className="flex items-center text-primary">
+                    <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-secondary rounded-lg w-9 h-9 mr-2 border text-white" />
                     {navbar.brandName}
                   </Link>
                 </SheetTitle>
@@ -117,7 +124,7 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
       <NavigationMenu className="hidden lg:block mx-auto">
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-card text-base">
+            <NavigationMenuTrigger className="bg-transparent text-base text-primary-foreground font-semibold">
               {navbar.featureDropdownLabel}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -133,9 +140,9 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
                   {navbar.features.map(({ title, description }) => (
                     <li
                       key={title}
-                      className="rounded-md p-3 text-sm hover:bg-muted"
+                      className="rounded-md p-3 text-sm hover:bg-accent/40"
                     >
-                      <p className="mb-1 font-semibold leading-none text-foreground">
+                      <p className="mb-1 font-semibold leading-none text-primary">
                         {title}
                       </p>
                       <p className="line-clamp-2 text-muted-foreground">
@@ -151,7 +158,7 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
           <NavigationMenuItem>
             {navbar.routes.map(({ href, label }) => (
               <NavigationMenuLink key={href} asChild>
-                <Link href={href} className="text-base px-2">
+                <Link href={href} className="text-base px-2 text-primary-foreground hover:text-accent-foreground">
                   {label}
                 </Link>
               </NavigationMenuLink>
@@ -162,22 +169,22 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
 
       <div className="hidden lg:flex items-center gap-2">
         {isLoggedIn ? (
-          <Button asChild size="sm">
+          <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-secondary hover:text-secondary-foreground">
             <Link href="/dashboard">{navbar.dashboardLabel}</Link>
           </Button>
         ) : (
           <>
-            <Button asChild size="sm" variant="ghost">
+            <Button asChild size="sm" variant="ghost" className="text-primary-foreground hover:text-secondary">
               <Link href="/auth#signin">{navbar.signInLabel}</Link>
             </Button>
-            <Button asChild size="sm">
+            <Button asChild size="sm" className="bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground">
               <Link href="/auth#signup">{navbar.signUpLabel}</Link>
             </Button>
           </>
         )}
         <ThemeToggle mode="inline" className="w-auto justify-center" />
 
-        <Button asChild size="sm" variant="ghost" aria-label={navbar.githubLink.ariaLabel}>
+        <Button asChild size="sm" variant="ghost" aria-label={navbar.githubLink.ariaLabel} className="text-primary-foreground hover:text-accent-foreground">
           <Link
             aria-label={navbar.githubLink.ariaLabel}
             href={navbar.githubLink.href}
