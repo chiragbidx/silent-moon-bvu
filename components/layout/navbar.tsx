@@ -24,7 +24,18 @@ import Image from "next/image";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { getHomeContent } from "@/content/home";
 
-const { navbar } = getHomeContent();
+const homeContent = getHomeContent();
+const navbar = homeContent?.navbar ?? {
+  brandName: "ClientPilot",
+  routes: [],
+  featureDropdownLabel: "CRM Features",
+  featureImage: { src: "/demo-img.jpg", alt: "ClientPilot preview" },
+  features: [],
+  signInLabel: "Sign in",
+  signUpLabel: "Sign up",
+  dashboardLabel: "Dashboard",
+  githubLink: { href: "#", ariaLabel: "View ClientPilot on GitHub" }
+};
 
 interface NavbarProps {
   isLoggedIn?: boolean;
@@ -43,7 +54,7 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
     >
       <Link href="/" className="font-bold text-lg flex items-center text-primary-foreground">
         <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-accent to-secondary rounded-lg w-9 h-9 mr-2 border text-white" />
-        {navbar.brandName}
+        {navbar.brandName || "ClientPilot"}
       </Link>
       {/* <!-- Mobile --> */}
       <div className="flex items-center lg:hidden">
@@ -64,13 +75,13 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
                 <SheetTitle className="flex items-center">
                   <Link href="/" className="flex items-center text-primary">
                     <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-secondary rounded-lg w-9 h-9 mr-2 border text-white" />
-                    {navbar.brandName}
+                    {navbar.brandName || "ClientPilot"}
                   </Link>
                 </SheetTitle>
               </SheetHeader>
 
               <div className="flex flex-col gap-2">
-                {navbar.routes.map(({ href, label }) => (
+                {(Array.isArray(navbar.routes) ? navbar.routes : []).map(({ href, label }) => (
                   <Button
                     key={href}
                     onClick={() => setIsOpen(false)}
@@ -87,7 +98,7 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
                     asChild
                     className="justify-start text-base"
                   >
-                    <Link href="/dashboard">{navbar.dashboardLabel}</Link>
+                    <Link href="/dashboard">{navbar.dashboardLabel || "Dashboard"}</Link>
                   </Button>
                 ) : (
                   <>
@@ -97,14 +108,14 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
                       variant="ghost"
                       className="justify-start text-base"
                     >
-                      <Link href="/auth#signin">{navbar.signInLabel}</Link>
+                      <Link href="/auth#signin">{navbar.signInLabel || "Sign in"}</Link>
                     </Button>
                     <Button
                       onClick={() => setIsOpen(false)}
                       asChild
                       className="justify-start text-base"
                     >
-                      <Link href="/auth#signup">{navbar.signUpLabel}</Link>
+                      <Link href="/auth#signup">{navbar.signUpLabel || "Sign up"}</Link>
                     </Button>
                   </>
                 )}
@@ -123,40 +134,44 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
       {/* <!-- Desktop --> */}
       <NavigationMenu className="hidden lg:block mx-auto">
         <NavigationMenuList>
-          <NavigationMenuItem>
-            <NavigationMenuTrigger className="bg-transparent text-base text-primary-foreground font-semibold">
-              {navbar.featureDropdownLabel}
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <div className="grid w-[600px] grid-cols-2 gap-5 p-4">
-                <Image
-                  src={navbar.featureImage.src}
-                  alt={navbar.featureImage.alt}
-                  className="h-full w-full rounded-md object-cover"
-                  width={600}
-                  height={600}
-                />
-                <ul className="flex flex-col gap-2">
-                  {navbar.features.map(({ title, description }) => (
-                    <li
-                      key={title}
-                      className="rounded-md p-3 text-sm hover:bg-accent/40"
-                    >
-                      <p className="mb-1 font-semibold leading-none text-primary">
-                        {title}
-                      </p>
-                      <p className="line-clamp-2 text-muted-foreground">
-                        {description}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
+          {navbar.featureDropdownLabel && (navbar.features?.length > 0) && (
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className="bg-transparent text-base text-primary-foreground font-semibold">
+                {navbar.featureDropdownLabel}
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="grid w-[600px] grid-cols-2 gap-5 p-4">
+                  {navbar.featureImage?.src && (
+                    <Image
+                      src={navbar.featureImage.src}
+                      alt={navbar.featureImage.alt}
+                      className="h-full w-full rounded-md object-cover"
+                      width={600}
+                      height={600}
+                    />
+                  )}
+                  <ul className="flex flex-col gap-2">
+                    {(Array.isArray(navbar.features) ? navbar.features : []).map(({ title, description }) => (
+                      <li
+                        key={title}
+                        className="rounded-md p-3 text-sm hover:bg-accent/40"
+                      >
+                        <p className="mb-1 font-semibold leading-none text-primary">
+                          {title}
+                        </p>
+                        <p className="line-clamp-2 text-muted-foreground">
+                          {description}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          )}
 
           <NavigationMenuItem>
-            {navbar.routes.map(({ href, label }) => (
+            {(Array.isArray(navbar.routes) ? navbar.routes : []).map(({ href, label }) => (
               <NavigationMenuLink key={href} asChild>
                 <Link href={href} className="text-base px-2 text-primary-foreground hover:text-accent-foreground">
                   {label}
@@ -170,25 +185,26 @@ export const Navbar = ({ isLoggedIn = false }: NavbarProps) => {
       <div className="hidden lg:flex items-center gap-2">
         {isLoggedIn ? (
           <Button asChild size="sm" className="bg-primary text-primary-foreground hover:bg-secondary hover:text-secondary-foreground">
-            <Link href="/dashboard">{navbar.dashboardLabel}</Link>
+            <Link href="/dashboard">{navbar.dashboardLabel || "Dashboard"}</Link>
           </Button>
         ) : (
           <>
             <Button asChild size="sm" variant="ghost" className="text-primary-foreground hover:text-secondary">
-              <Link href="/auth#signin">{navbar.signInLabel}</Link>
+              <Link href="/auth#signin">{navbar.signInLabel || "Sign in"}</Link>
             </Button>
             <Button asChild size="sm" className="bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground">
-              <Link href="/auth#signup">{navbar.signUpLabel}</Link>
+              <Link href="/auth#signup">{navbar.signUpLabel || "Sign up"}</Link>
             </Button>
           </>
         )}
         <ThemeToggle mode="inline" className="w-auto justify-center" />
 
-        <Button asChild size="sm" variant="ghost" aria-label={navbar.githubLink.ariaLabel} className="text-primary-foreground hover:text-accent-foreground">
+        <Button asChild size="sm" variant="ghost" aria-label={navbar.githubLink?.ariaLabel ?? "View ClientPilot on GitHub"} className="text-primary-foreground hover:text-accent-foreground">
           <Link
-            aria-label={navbar.githubLink.ariaLabel}
-            href={navbar.githubLink.href}
+            aria-label={navbar.githubLink?.ariaLabel ?? "View ClientPilot on GitHub"}
+            href={navbar.githubLink?.href ?? "#"}
             target="_blank"
+            rel="noopener noreferrer"
           >
             <Github className="size-5" />
           </Link>
