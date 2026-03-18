@@ -46,7 +46,7 @@ export default async function Home() {
     .filter(([id]) => !hide.has(id));
 
   return (
-    <div className="home-dark min-h-screen bg-gradient-to-b from-zinc-50 via-white to-[#ffe6d8] text-zinc-900 transition-colors dark:from-[#120d0b] dark:via-[#16100d] dark:to-[#1f1612] dark:text-[#f7efe8]">
+    <div className="home-dark min-h-screen bg-gradient-to-b from-primary/10 via-secondary/10 to-background text-foreground transition-colors dark:from-primary/20 dark:via-secondary/20 dark:to-background dark:text-foreground">
       <LayoutNavbar isLoggedIn={!!session} />
       <main className="flex min-h-screen w-full flex-col gap-12 px-6 py-12 sm:px-10 lg:px-16 lg:max-w-[1600px] lg:mx-auto">
         {visibleSections.map(([, node]) => node)}
@@ -88,10 +88,10 @@ export default async function Home() {
         }
         .hover-lift:hover {
           transform: translateY(-6px);
-          box-shadow: 0 20px 40px -24px rgba(251, 114, 50, 0.45);
+          box-shadow: 0 20px 40px -24px rgba(40, 140, 255, 0.45);
         }
         .dark .home-dark .hover-lift:hover {
-          box-shadow: 0 18px 44px -26px rgba(0, 0, 0, 0.75);
+          box-shadow: 0 18px 44px -26px rgba(51, 209, 122, 0.40);
         }
       `}</style>
     </div>
